@@ -12,13 +12,24 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
       
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          workload_identity_provider: 'projects/448693639111/locations/global/workloadIdentityPools/github/providers/my-repo'
-          service_account: 'hem-artifact-registry-write-sa@project-naresh-69399.iam.gserviceaccount.com'
-          export_default_credentials: true
+      # - name: Set up Cloud SDK
+      #   uses: google-github-actions/setup-gcloud@master
+      #   with:
+      #     workload_identity_provider: 'projects/448693639111/locations/global/workloadIdentityPools/github/providers/my-repo'
+      #     service_account: 'hem-artifact-registry-write-sa@project-naresh-69399.iam.gserviceaccount.com'
+      #     export_default_credentials: true
       
+      - id: auth
+        uses: google-github-actions/auth@55bd3a7c6e2ae7cf1877fd1ccb9d54c0503c457c
+        with:
+          workload_identity_provider: "projects/448693639111/locations/global/workloadIdentityPools/github/providers/my-repo"
+          service_account: "hem-artifact-registry-write-sa@project-naresh-69399.iam.gserviceaccount.com"
+          create_credentials_file: true
+          access_token_lifetime: 300s
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@98ddc00a17442e89a24bbf282954a3b65ce6d200"
+
       - name: Configure Docker
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
       
